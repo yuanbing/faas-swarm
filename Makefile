@@ -3,6 +3,9 @@ TAG?=latest-dev
 build:
 	docker build --build-arg http_proxy="${http_proxy}" --build-arg https_proxy="${https_proxy}" -t openfaas/faas-swarm:$(TAG) .
 
+build-local:
+	docker build --build-arg http_proxy="${http_proxy}" --build-arg https_proxy="${https_proxy}" -t byuan123/openfaas/faas-swarm:$(TAG) . -f Dockerfile.local
+
 .PHONY: test-unit
 test-unit:
 	go test -v $(go list ./... | grep -v /vendor/) -cover
@@ -14,6 +17,9 @@ build-armhf:
 .PHONY: push
 push:
 	docker push openfaas/faas-swarm:$(TAG)
+
+push-local:
+	docker push byuan123/faas-swarm:$(TAG)
 
 .PHONY: all
 all: build

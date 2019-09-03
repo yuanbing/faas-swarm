@@ -74,5 +74,7 @@ func main() {
 
 	log.Printf("Basic authentication: %v\n", bootstrapConfig.EnableBasicAuth)
 
+	log.Printf("Starting FaaS function provider at port %d\n", cfg.TCPPort)
+
 	bootstrap.Serve(&bootstrapHandlers, &bootstrapConfig)
 }

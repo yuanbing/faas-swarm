@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/rand"
 	"net"
 	"net/url"
@@ -51,6 +52,7 @@ func NewFunctionLookup(client ServiceLister, dnsRoundRobin bool) *FunctionLookup
 // Swarm.  It can be configured to do this via DNS or by querying the Docker Service
 // list.
 func (l *FunctionLookup) Resolve(name string) (u url.URL, err error) {
+	log.Printf("Resolving %s\n", name)
 	return l.ResolveContext(context.Background(), name)
 }
 
@@ -61,6 +63,7 @@ func (l *FunctionLookup) ResolveContext(ctx context.Context, name string) (u url
 	if l.dnsRoundRobin {
 		u.Host, err = l.byDNSRoundRobin(ctx, name)
 	} else {
+		log.Printf("Resolving name %s by docker VIP", name)
 		u.Host, err = l.byName(ctx, name)
 	}
 
@@ -83,6 +86,10 @@ func (l *FunctionLookup) byName(ctx context.Context, name string) (string, error
 	}
 
 	if len(services) > 0 {
+		log.Printf("Found %d docker services with name %s\n", len(services), name)
+		for _, service := range services {
+			log.Printf("Found service %s\n", service)
+		}
 		return name, nil
 	}
 
